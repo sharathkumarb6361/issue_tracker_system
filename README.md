@@ -16,12 +16,16 @@ Issue Tracker System is a full-stack application for creating, assigning, tracki
 - Issue comments with author-only deletion
 - Responsive interface for desktop, tablet, and mobile
 
+## Architecture
+
+The application uses the Next.js App Router. Server-rendered pages protect authenticated routes and load dashboard/issue details through Prisma. Client components call authenticated Next.js route handlers for login, registration, issue CRUD, user lists, filtering, and comments. Prisma connects to Supabase PostgreSQL; Zod validates request data before database writes. JWT sessions are stored in HTTP-only cookies.
+
 ## Technology Stack
 
 - Next.js
 - JavaScript (ES modules and JSX)
 - Tailwind CSS
-- PostgreSQL
+- PostgreSQL (Supabase)
 - Prisma
 - JWT (`jose`)
 - `bcryptjs`
@@ -52,14 +56,15 @@ npm install
 
 ## Environment Setup
 
-Copy `.env.example` to `.env` and provide values for the local environment. Do not commit `.env`.
+Copy `.env.example` to `.env` and replace the password placeholders with the Supabase **database password**. Do not commit `.env` or paste its contents into issue trackers or chat.
 
 ```dotenv
-DATABASE_URL="postgresql://<user>:<password>@localhost:5432/issue_tracker?schema=public"
+DATABASE_URL="postgresql://postgres.<project-ref>:<password>@<region>.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.<project-ref>:<password>@<region>.pooler.supabase.com:5432/postgres"
 JWT_SECRET="replace-with-a-long-random-secret"
 ```
 
-Create the `issue_tracker` PostgreSQL database before applying migrations. Use a strong, unique `JWT_SECRET` outside development.
+Copy the complete pooler connection strings from Supabase **Connect**. `DATABASE_URL` uses the transaction pooler for application runtime; `DIRECT_URL` uses the session pooler for migrations. URL-encode special characters in the database password. Use a strong, unique `JWT_SECRET` outside development. The checked-in `.env.example` contains placeholders only.
 
 ## Database Setup
 
@@ -78,6 +83,27 @@ npm run dev
 ```
 
 Open <http://localhost:3000>.
+
+## Deployment
+
+The application is designed for **Vercel** with **Supabase PostgreSQL**. The deployment approach is to connect the GitHub repository to Vercel (or deploy with the Vercel CLI), configure production environment variables in the Vercel project settings, and deploy the Next.js production build. Required services are a Vercel project, a Supabase PostgreSQL project, and the GitHub repository (for Git-based deployments).
+
+Required Vercel environment variables:
+
+- `DATABASE_URL`: Supabase transaction pooler URL on port `6543` with `pgbouncer=true`.
+- `DIRECT_URL`: Supabase session pooler URL on port `5432`, used by Prisma migrations.
+- `JWT_SECRET`: a strong, randomly generated production secret.
+
+Deployment/update steps:
+
+1. Push the complete application source to the connected GitHub repository.
+2. Import the repository into Vercel and use the detected Next.js settings (`npm install`, `npm run build`, output managed by Next.js).
+3. Add the three environment variables to Vercel for Production and Preview as appropriate. Never commit or expose their values.
+4. Apply committed database migrations with `npx prisma migrate deploy` from a trusted environment using the production `DIRECT_URL` before routing traffic to a schema-changing release.
+5. Deploy to Production from Vercel. Subsequent pushes to the production branch trigger deployments; preview branches receive Preview deployments.
+6. Verify `/login`, authentication, and the dashboard against the production Supabase database. Do not run the development seed against a production database unless sample accounts/data are explicitly desired.
+
+Live deployment URL: **Not deployed yet.** Replace this line with the Vercel Production URL after a successful deployment; do not use a preview URL as the permanent production link.
 
 ## Production Build
 

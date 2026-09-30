@@ -1,0 +1,5 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import Link from 'next/link';
+export default function IssueNotFound() {
+    return (_jsx("div", { className: "mx-auto flex w-full max-w-3xl flex-1 items-center px-4 py-16 sm:px-6 lg:px-8", children: _jsxs("div", { className: "w-full rounded-md border border-slate-200 bg-white p-6 shadow-sm sm:p-8", children: [_jsx("p", { className: "text-xs font-semibold uppercase text-teal-800", children: "Issue details" }), _jsx("h1", { className: "mt-2 text-2xl font-semibold text-slate-950", children: "Issue not found." }), _jsx("p", { className: "mt-2 text-sm text-slate-600", children: "This issue may have been deleted or the link may be incorrect." }), _jsx(Link, { href: "/issues", className: "mt-5 inline-flex min-h-10 items-center rounded-md bg-teal-800 px-4 text-sm font-semibold text-white hover:bg-teal-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2", children: "Back to Issues" })] }) }));
+}

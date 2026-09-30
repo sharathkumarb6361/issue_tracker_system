@@ -1,0 +1,7 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import Link from 'next/link';
+import { ClipboardCheck } from 'lucide-react';
+import LogoutButton from '@/components/logout-button';
+export default function Header({ user }) {
+    return (_jsx("header", { className: "sticky top-0 z-30 border-b border-slate-200 bg-white", children: _jsxs("div", { className: "mx-auto flex min-h-16 w-full max-w-screen-2xl flex-wrap items-center justify-between gap-x-5 gap-y-2 px-4 py-2 sm:px-6 lg:px-8", children: [_jsxs(Link, { href: "/dashboard", "aria-label": "Issue Tracker dashboard", className: "inline-flex min-h-11 items-center gap-2.5 rounded-sm text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700", children: [_jsx("span", { className: "flex h-9 w-9 items-center justify-center rounded-md bg-teal-800 text-white", children: _jsx(ClipboardCheck, { "aria-hidden": "true", size: 20, strokeWidth: 1.8 }) }), _jsx("span", { className: "text-base font-semibold", children: "Issue Tracker" })] }), _jsxs("div", { className: "flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-end", children: [_jsxs("div", { className: "min-w-0 sm:text-right", children: [_jsx("p", { className: "truncate text-sm font-semibold text-slate-900", children: user.name }), _jsx("p", { className: "max-w-[min(65vw,20rem)] truncate text-xs text-slate-500 sm:max-w-64", title: user.email, children: user.email })] }), _jsx(LogoutButton, { variant: "outline", size: "sm", className: "shrink-0" })] })] }) }));
+}
