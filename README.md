@@ -20,6 +20,20 @@ Issue Tracker System is a full-stack application for creating, assigning, tracki
 
 The application uses the Next.js App Router. Server-rendered pages protect authenticated routes and load dashboard/issue details through Prisma. Client components call authenticated Next.js route handlers for login, registration, issue CRUD, user lists, filtering, and comments. Prisma connects to Supabase PostgreSQL; Zod validates request data before database writes. JWT sessions are stored in HTTP-only cookies.
 
+```mermaid
+flowchart LR
+	User[User in browser] -->|HTTPS pages and interactions| Vercel[Vercel Next.js app]
+	Vercel --> Middleware[Auth middleware]
+	Middleware --> Pages[App Router pages and React components]
+	Pages -->|Form and filter requests| Routes[Next.js API route handlers]
+	Pages -->|Server-rendered queries| Prisma[Prisma Client]
+	Routes -->|Zod validation and auth checks| Prisma
+	Prisma -->|DATABASE_URL: pooled PostgreSQL| Supabase[(Supabase PostgreSQL)]
+	Migrations[Prisma migrations] -->|DIRECT_URL: session pooler| Supabase
+	Auth[JWT in HTTP-only cookie] -. verified by .-> Middleware
+	Auth -. verified by .-> Routes
+```
+
 ## Technology Stack
 
 - Next.js
@@ -103,7 +117,7 @@ Deployment/update steps:
 5. Deploy to Production from Vercel. Subsequent pushes to the production branch trigger deployments; preview branches receive Preview deployments.
 6. Verify `/login`, authentication, and the dashboard against the production Supabase database. Do not run the development seed against a production database unless sample accounts/data are explicitly desired.
 
-Live deployment URL: **Not deployed yet.** Replace this line with the Vercel Production URL after a successful deployment; do not use a preview URL as the permanent production link.
+Live deployment URL: <https://issue-tracker-system-tu7k.vercel.app/>
 
 ## Production Build
 
@@ -153,7 +167,7 @@ All issue, user, and comment endpoints require authentication. Registration and 
 
 ## Development/Test Credentials
 
-These accounts are created by the development seed. Run `npx prisma db seed` first. Do not use these credentials in a deployed environment.
+Open the [Issue Tracker login page](https://issue-tracker-system-tu7k.vercel.app/login). These accounts are created by `npx prisma db seed`; seed the database before signing in. The credentials below are shared development/test defaults and must not be used for real users or in production.
 
 | User | Email | Password |
 | --- | --- | --- |

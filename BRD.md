@@ -66,7 +66,7 @@ All credentials must remain private and URL-reserved characters in database pass
 
 ### Deployment URL
 
-Production URL: **Not deployed yet.** Record the Vercel Production URL here after the first successful deployment.
+Production URL: <https://issue-tracker-system-tu7k.vercel.app/>
 
 ## 7. Acceptance Criteria
 
